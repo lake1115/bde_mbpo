@@ -64,7 +64,8 @@ class GaussianBDEMLP(GaussianMLP):
             self.mean_and_logvar.toggle_use_only_elite()
         
     '''
-
+    def set_elite(self, elite_indices: Sequence[int]):
+        self.elite_models = list(elite_indices)
     def forward(  # type: ignore
         self,
         x: torch.Tensor,
