@@ -8,7 +8,7 @@ from torch.nn import functional as F
 import torch.distributions as D
 from .gaussian_mlp import GaussianMLP
 
-class GaussianBdeMLP(GaussianMLP):
+class GaussianBDEMLP(GaussianMLP):
     def __init__(
         self,
         in_size: int,
@@ -89,11 +89,7 @@ class GaussianBdeMLP(GaussianMLP):
         """
         Compute the forward pass of the ensemble model.
         """
-        # model_weights: [batch_size, num_elite_models]
-        self.model_weights = self.model_weights[...,:len(self.elite_models)]
-        # normalizing model weights
-        self.model_weights = F.softmax(self.model_weights.log(),dim=1) # / torch.sum(self.model_weights, dim=1, keepdim=True)
-        if self.model_weights.shape[0] != x.shape[0]:
+        if self.model_weights.shape[0] != x.shape[0]:  ## 这里是N_s固定为1了？
             N_s = x.shape[0] // self.model_weights.shape[0]
         else: 
             N_s = 1
@@ -167,55 +163,15 @@ class GaussianBdeMLP(GaussianMLP):
         ensemble_var = torch.exp(torch.sum(logvar.reshape(-1, N_s*batch_size, out_size)*model_weights, dim=0))
 
         pdf = []
-
-        for i in range(num_elite_models) :
-            dist = D.Normal(mean[i]. reshape(N_s*batch_size, out_size), torch.sqrt(logvar[i].reshape(N_s*batch_size, out_size). exp()))
-            pdf.append(torch.mean(torch.exp( dist.log_prob(y)),dim=-1))
-
-        pdf = torch. stack(pdf,dim=0).reshape(-1, N_s, batch_size)
+        for i in range(num_elite_models):
+            dist = D.Normal(mean[i].reshape(N_s*batch_size, out_size), torch.sqrt(logvar[i].reshape(N_s*batch_size, out_size).exp()))
+            pdf.append(torch.mean(torch.exp(dist.log_prob(y)),dim=-1))
+        pdf = torch.stack(pdf,dim=0).reshape(-1, N_s, batch_size)
         likelihood = nn.Softmax(dim=0)(pdf)
-        dist = D.Normal(ensemble_mean, torch.sqrt(ensemble_var) )
-        log_likelihood = torch.mean(dist.log_prob(y), dim=-1).reshape(N_s, batch_size)
+        dist = D.Normal(ensemble_mean, torch.sqrt(ensemble_var))
+        log_likelihood = torch.mean(dist.log_prob(y),dim=-1).reshape(N_s, batch_size)
 
-        """
-        ensemble_var = torch.clip(ensemble_var, min=1e-8)
-
-        for i in range(mean.shape[-1]):
-            log_likelihood += (y[:, i]-ensemble_mean[:, i]) ** 2/ ensemble_var[:, i]
-
-        log_likelihood = -log_likelihood / 2 - torch.log(
-            torch.sqrt(torch.clip(torch.prod(ensemble_var, dim=1), min=1e-8))* (2 * np.pi)**(out_size / 2)
-        ) 
-
-        if log_likelihood.isnan().sum() > 0:
-            raise ValueError("log likelihood contains nan")
-
-        # [num_elite_models*batch_size, out_size]
-        y = y.repeat(num_elite_models, 1, 1).reshape(-1, out_size)
-
-        mean, logvar = mean.reshape(-1, out_size), logvar.reshape(-1, out_size)
-        covariance = torch.exp(logvar)
-
-        # compute likelihood for each model
-        likelihood = torch.zeros(mean.shape[0]).to(self.device)
-        for i in range(mean.shape[-1]):
-            likelihood += (y[:, i]-mean[:, i])**2/ covariance[:, i]
-        
-        temp = (torch.sqrt(torch.prod(covariance, dim=1)) * (2 * np.pi)**(out_size / 2))
-        
-        temp = torch.clip(temp, min=1e-8)
-        if temp.isnan().sum()>0:
-            raise ValueError("likelihood contains nan")
-        likelihood = torch.exp(-0.5 * likelihood) / temp
-        likelihood = likelihood.reshape(num_elite_models, N_s, batch_size)
-        
-        # clip
-        likelihood = torch.clip(likelihood, min=1e-8)
-        if likelihood.isnan().sum()>0:
-            raise ValueError("likelihood contains nan")
-        """
-
-        return likelihood, log_likelihood# .reshape(N_s, batch_size)
+        return likelihood, log_likelihood
 
 if __name__ == "__main__":
     pass

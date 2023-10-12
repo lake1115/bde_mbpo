@@ -45,15 +45,10 @@ def rollout_model_and_populate_sac_buffer(
     )
     accum_dones = np.zeros(initial_obs.shape[0], dtype=bool)
     obs = initial_obs
-    # NOTE: set rollout_horizon mannually
-    # rollout_horizon = 2
     for i in range(rollout_horizon):
         action = agent.act(obs, sample=sac_samples_action, batched=True)
-        # whether refresh the model_env dataset and model_weights
-        end_factor = False if i < rollout_horizon - 1 else True
-         
         pred_next_obs, pred_rewards, pred_dones, model_state = model_env.step(
-            agent, sac_samples_action, action, model_state, sample=True, end_factor=end_factor
+            action, model_state, sample=True
         )
         truncateds = np.zeros_like(pred_dones, dtype=bool)
         sac_buffer.add_batch(
@@ -188,8 +183,6 @@ def train(
     env_steps = 0
     model_env = mbrl.models.ModelEnv(
         env, dynamics_model, termination_fn, None, generator=torch_generator
-        , alpha = cfg.overrides.fogetting_alpha
-        , N_s = cfg.overrides.N_s
     )
     model_trainer = mbrl.models.ModelTrainer(
         dynamics_model,

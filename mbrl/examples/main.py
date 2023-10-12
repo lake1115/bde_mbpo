@@ -7,6 +7,13 @@ import numpy as np
 import omegaconf
 import torch
 
+import sys, os
+sys.path.insert(0,os.getcwd())
+os.system('nvidia-smi -q -d Memory | grep -A5 GPU | grep Free > tmp.txt')
+memory_gpu = [int(x.split()[2]) for x in open('tmp.txt', 'r').readlines()]
+os.environ["CUDA_VISIBLE_DEVICES"] = str(np.argmax(memory_gpu)) 
+os.system('rm tmp.txt')
+
 import mbrl.algorithms.mbpo as mbpo
 import mbrl.algorithms.pets as pets
 import mbrl.algorithms.planet as planet

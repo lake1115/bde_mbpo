@@ -18,12 +18,10 @@ def get_dir():
     for i in range(len(experiment_names)):
         experiment_names[i] = [os.path.join(experiment_dir[i], exp_name) for exp_name in experiment_names[i]]
 
-    flatten = lambda l: [item for sublist in l for item in sublist]
-    experiment_names = flatten(experiment_names)
-    return experiment_names
+    return experiment_names[0]
 
 def plot_with_filterd(filtered_name
-                      , pattern = r'rl\d+'
+                      , pattern = r'rl\d+_Ns\d+'
                       , filename='results.csv'
                       , y_label='episode_reward'
                       , save_dir=None):
@@ -46,7 +44,7 @@ def plot_with_filterd(filtered_name
         #else:
         data_model_lst.append(df.sort_values(by=['step']))
         label = filtered_name[i].split("/")[-1]
-        labels.append(*re.findall(pattern, label))
+        labels.append(re.findall(pattern, label))
 
     # plot the results
     plt.figure(figsize=(10, 4), dpi=300)
@@ -70,13 +68,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     experiment_names = get_dir()
-    filter_condition = args.filter_condition
-    filtered_name = list(filter(lambda x: filter_condition in x, experiment_names))
-
-    plot_with_filterd(filtered_name, pattern = r'rl\d+', filename='results.csv', y_label='episode_reward', save_dir=args.save_dir)
+   
+    filtered_name = experiment_names
+    plot_with_filterd(filtered_name, pattern = r'rl\d+_Ns\d+', filename='results.csv', y_label='episode_reward', save_dir=args.save_dir)
     plot_with_filterd(filtered_name
-                      , pattern = r'rl\d+', filename='model_train.csv'
+                      , pattern = r'rl\d+_Ns\d+', filename='model_train.csv'
                       , y_label='model_loss', save_dir=args.save_dir)
-    plot_with_filterd(filtered_name, pattern = r'rl\d+'
+    plot_with_filterd(filtered_name, pattern = r'rl\d+_Ns\d+'
                       , filename='train.csv', save_dir=args.save_dir
                       , y_label='actor_loss')

@@ -210,11 +210,11 @@ def train(
     )
     updates_made = 0
     env_steps = 0
-    model_env = mbrl.models.ModelEnv(
+    model_env = mbrl.models.BDE_ModelEnv(
         env, dynamics_model, termination_fn, None, generator=torch_generator
         , alpha = cfg.overrides.fogetting_alpha
         , N_s = cfg.overrides.N_s
-    ) 
+    )
     model_trainer = mbrl.models.ModelTrainer(
         dynamics_model,
         optim_lr=cfg.overrides.model_lr,
@@ -224,8 +224,7 @@ def train(
     best_eval_reward = -np.inf
     epoch = 0
     sac_buffer = None
-    # log_model_weights = cfg.get("log_model_weights", False)
-    log_model_weights_freq = cfg.get("log_model_weights_freq", False)
+    log_model_weights_freq = cfg.overrides.get("log_model_weights_freq", False)
     while env_steps < cfg.overrides.num_steps:
         rollout_length = int(
             mbrl.util.math.truncated_linear(
@@ -235,8 +234,8 @@ def train(
 
         # NOTE: set rollout_length mannually
         # written in main.yaml
-        if cfg.get("rollout_length", 0) != 0:
-            rollout_length = cfg.rollout_length
+        if cfg.overrides.get("rollout_length", 0) != 0:
+            rollout_length = cfg.overrides.rollout_length
 
         sac_buffer_capacity = rollout_length * rollout_batch_size * trains_per_epoch
         sac_buffer_capacity *= cfg.overrides.num_epochs_to_retain_sac_buffer

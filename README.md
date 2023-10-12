@@ -10,7 +10,7 @@
 ```bash
 python -m mbrl.examples.main \
   algorithm=bde_mbpo \
-  overrides=mbpo_cartpole \
+  overrides=bde_mbpo_humanoid \
   dynamics_model=gaussian_mean_mlp_ensemble \ 
   ... \
   dynamics_model.activation_fn_cfg._target_=torch.nn.ReLU
@@ -19,9 +19,9 @@ python -m mbrl.examples.main \
 其中文件夹命名规则为, 以下为例:
 - rl: rollout_length参数
 
-## GaussianBdeMLP
+## GaussianBDEMLP
 
-- 在使用`GaussianBdeMLP`时需要使用
+- 在使用`GaussianBDEMLP`时需要使用
   - `- dynamics_model: gaussian_bde_mlp_ensemble`
 
 - 可以使用如下命令进行修改
@@ -29,7 +29,7 @@ python -m mbrl.examples.main \
 ```bash
 python -m mbrl.examples.main \
   algorithm=bde_mbpo \
-  overrides=mbpo_cartpole \
+  overrides=bde_mbpo_humanoid \
   dynamics_model=gaussian_bde_mlp_ensemble \ 
   ... \
   dynamics_model.activation_fn_cfg._target_=torch.nn.ReLU

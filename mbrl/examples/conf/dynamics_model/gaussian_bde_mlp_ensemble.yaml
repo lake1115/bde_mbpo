@@ -1,5 +1,5 @@
 # @package _group_
-_target_: mbrl.models.GaussianBdeMLP
+_target_: mbrl.models.GaussianBDEMLP
 device: ${device}
 num_layers: 4
 in_size: ???

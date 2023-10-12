@@ -27,3 +27,9 @@ sac_target_entropy: -1 # ignored, since entropy tuning is false
 sac_hidden_size: 1024
 sac_lr: 0.0001
 sac_batch_size: 256
+
+# bde algos
+N_s: 10
+fogetting_alpha: 0.5
+rollout_length: 0 # rollout length set mannually
+log_model_weights_freq: 100
