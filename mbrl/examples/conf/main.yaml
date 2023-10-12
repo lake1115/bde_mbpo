@@ -1,0 +1,25 @@
+defaults:
+  - algorithm: bde_mbpo
+  - dynamics_model: gaussian_bde_mlp_ensemble
+  - overrides: mbpo_walker
+  # - action_optimizer: cem
+
+seed: 0
+device: "cuda:0"
+log_frequency_agent: 1000
+save_video: false
+debug_mode: true
+
+rollout_length: 3 # rollout length set mannually
+
+experiment: default
+log_model_weights_freq: 100
+# log_model_weights: false
+
+root_dir: "./exp"
+hydra:
+  run:
+    dir: ${root_dir}/${algorithm.name}/${experiment}/${overrides.env}_Ns${overrides.N_s}_rl${rollout_length}_seed${seed}_${now:%Y.%m.%d}_${now:%H%M%S}
+
+  sweep:
+    dir: ${root_dir}/${algorithm.name}/${experiment}/${overrides.env}_Ns${overrides.N_s}_rl${rollout_length}_seed${seed}/${now:%Y.%m.%d}/${now:%H%M%S}
