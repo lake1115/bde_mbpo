@@ -19,18 +19,18 @@ from mbrl.third_party import pytorch_sac_pranz24
 
 import argparse
 
-# import matplotlib as mpl
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import omegaconf
 
-# import mbrl.env.reward_fns as reward_fns
-# import mbrl.env.termination_fns as termination_fns
-# import mbrl.models as models
-# import mbrl.planning as planning
-# import mbrl.util.common as common_util
-# import mbrl.util as util
+import mbrl.env.reward_fns as reward_fns
+import mbrl.env.termination_fns as termination_fns
+import mbrl.models as models
+import mbrl.planning as planning
+import mbrl.util.common as common_util
+import mbrl.util as util
 import mbrl.util.env
 
 def create_config(seed):
