@@ -15,6 +15,7 @@ import mbrl.types
 from . import ModelEnv
 from . import Model
 from . import GaussianMeanMLP
+from . import GaussianMLP
 import pandas as pd
 
 class BDE_ModelEnv(ModelEnv):
@@ -46,7 +47,7 @@ class BDE_ModelEnv(ModelEnv):
         reward_fn: Optional[mbrl.types.RewardFnType] = None,
         generator: Optional[torch.Generator] = None,
         alpha: float = 0.5,
-        N_s: int = 10,
+        N_s: int = 3,
     ):
         self.dynamics_model = model
         self.termination_fn = termination_fn
@@ -131,7 +132,7 @@ class BDE_ModelEnv(ModelEnv):
         with torch.no_grad():
             # if actions is tensor, code assumes it's already on self.device
             if isinstance(actions, np.ndarray):
-                if isinstance(self.dynamics_model.model, GaussianMeanMLP):
+                if not hasattr(self.dynamics_model.model, 'model_weights'):
                     isPF = False
                 elif self.dynamics_model.model.model_weights is None:
                     isPF = True
@@ -172,7 +173,7 @@ class BDE_ModelEnv(ModelEnv):
                     deterministic = not sample,
                     rng=self._rng,
                 )
-                raise
+                raise ValueError("NaN in model output")
 
             rewards = (
                 pred_rewards
@@ -259,7 +260,6 @@ class BDE_ModelEnv(ModelEnv):
                 self._update_dataset_weights(log_likelihood)
 
             if (log_model_weights) and (isPF) and (epoch > 0):
-                # TODO: 增加一个step的参数
                 # log model_weights [batch_size, num_models]
                 log_dir = os.path.join(log_dir, "model_weights.csv")
                 model_weights = self.dynamics_model.model.model_weights.cpu().numpy()

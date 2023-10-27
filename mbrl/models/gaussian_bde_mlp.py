@@ -64,8 +64,7 @@ class GaussianBDEMLP(GaussianMLP):
             self.mean_and_logvar.toggle_use_only_elite()
         
     '''
-    def set_elite(self, elite_indices: Sequence[int]):
-        self.elite_models = list(elite_indices)
+
     def forward(  # type: ignore
         self,
         x: torch.Tensor,
@@ -90,7 +89,12 @@ class GaussianBDEMLP(GaussianMLP):
         """
         Compute the forward pass of the ensemble model.
         """
-        if self.model_weights.shape[0] != x.shape[0]:  ## 这里是N_s固定为1了？
+        # model_weights: [batch_size, num_elite_models]
+        self.model_weights = self.model_weights[...,:len(self.elite_models)]
+        # normalizing model weights
+        self.model_weights = F.softmax(torch.log(self.model_weights+1e-6),dim=1) 
+
+        if self.model_weights.shape[0] != x.shape[0]:
             N_s = x.shape[0] // self.model_weights.shape[0]
         else: 
             N_s = 1
