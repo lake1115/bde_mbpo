@@ -32,3 +32,4 @@ sac_batch_size: 256
 N_s: 10
 bde_alpha: 0.5
 rollout_length: 0
+log_model_weights_freq: 25
