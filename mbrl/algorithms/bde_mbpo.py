@@ -212,7 +212,7 @@ def train(
     env_steps = 0
     model_env = mbrl.models.BDE_ModelEnv(
         env, dynamics_model, termination_fn, None, generator=torch_generator
-        , alpha = cfg.overrides.fogetting_alpha
+        , alpha = cfg.overrides.get("bde_alpha", 0.5)
         , N_s = cfg.overrides.N_s
     )
     model_trainer = mbrl.models.ModelTrainer(
