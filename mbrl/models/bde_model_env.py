@@ -271,7 +271,7 @@ class BDE_ModelEnv(ModelEnv):
                 model_weights.reset_index(inplace=True)
                 model_weights.to_csv(log_dir, mode='a', header=True, index=True)
 
-            if end_factor == True:
+            if (end_factor == True) and isPF:
                 self._set_init_state()
             
 

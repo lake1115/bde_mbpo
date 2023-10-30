@@ -23,5 +23,6 @@ python -m mbrl.examples.main \
     dynamics_model=gaussian_mean_mlp_ensemble \
     seed=1 \
     experiment=mean_hopper_test \
-    overrides.N_s=1
-
+    overrides.N_s=1 \
+    overrides.rollout_length=0 # \
+    # rollout_length=2

@@ -13,11 +13,12 @@ debug_mode: true
 
 experiment: default
 
+rollout_length: ${overrides.rollout_length}
 
 root_dir: "./exp"
 hydra:
   run:
-    dir: ${root_dir}/${algorithm.name}/${experiment}/${overrides.env}/${now:%Y.%m.%d}_${now:%H%M%S}
+    dir: ${root_dir}/${algorithm.name}/${experiment}/${overrides.env}_Ns${overrides.N_s}_rl${rollout_length}_seed${seed}_${now:%Y.%m.%d}_${now:%H%M%S}
 
   sweep:
-    dir: ${root_dir}/${algorithm.name}/${experiment}/${overrides.env}/${now:%Y.%m.%d}/${now:%H%M%S}
+    dir: ${root_dir}/${algorithm.name}/${experiment}/${overrides.env}_Ns${overrides.N_s}_rl${rollout_length}_seed${seed}/${now:%Y.%m.%d}/${now:%H%M%S}

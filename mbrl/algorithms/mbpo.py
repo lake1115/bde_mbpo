@@ -199,6 +199,10 @@ def train(
                 *(cfg.overrides.rollout_schedule + [epoch + 1])
             )
         )
+
+        if cfg.overrides.get("rollout_length", 0) != 0:
+            rollout_length = cfg.overrides.rollout_length
+
         sac_buffer_capacity = rollout_length * rollout_batch_size * trains_per_epoch
         sac_buffer_capacity *= cfg.overrides.num_epochs_to_retain_sac_buffer
         sac_buffer = maybe_replace_sac_buffer(
