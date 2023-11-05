@@ -1,7 +1,7 @@
 import hydra
 import pandas as pd
 import mbrl
-# from mbrl.models import ModelEnv
+# from mbrl.models import BDE_ModelEnv
 # from mbrl.third_party.pytorch_sac_pranz24 import SAC
 from typing import cast
 import os
@@ -113,9 +113,9 @@ if __name__ == "__main__":
     dtype = np.double if use_double_dtype else np.float32
     
     ##########  create model env  ############
-    model_env = mbrl.models.ModelEnv(
+    model_env = mbrl.models.BDE_ModelEnv(
         env, dynamics_model, term_fn, None, generator=torch_generator
-        , alpha = cfg.overrides.fogetting_alpha
+        , alpha = cfg.overrides.bde_alpha
         , N_s = cfg.overrides.N_s
     )
     ##########################################

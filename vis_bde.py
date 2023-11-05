@@ -137,7 +137,7 @@ if __name__ == "__main__":
     ##########  create model env  ############
     model_env = mbrl.models.ModelEnv(
         env, dynamics_model, term_fn, None, generator=torch_generator
-        , alpha = cfg.overrides.fogetting_alpha
+        , alpha = cfg.overrides.bde_alpha
         , N_s = cfg.overrides.N_s
     )
     ##########################################
