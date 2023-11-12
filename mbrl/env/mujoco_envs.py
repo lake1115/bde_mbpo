@@ -9,3 +9,4 @@ from .pets_cartpole import CartPoleEnv
 from .pets_halfcheetah import HalfCheetahEnv
 from .pets_pusher import PusherEnv
 from .pets_reacher import Reacher3DEnv
+from .halfcheetah_velocity import HalfCheetahVelEnv

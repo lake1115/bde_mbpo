@@ -96,6 +96,10 @@ def _legacy_make_env(
             env = mbrl.env.mujoco_envs.HumanoidTruncatedObsEnv()
             term_fn = mbrl.env.termination_fns.humanoid
             reward_fn = None
+        elif cfg.overrides.env == "halfcheetah_velocity":
+            env = mbrl.env.mujoco_envs.HalfCheetahVelEnv(cfg.get("goal_vel", 1.0))
+            term_fn = mbrl.env.termination_fns.no_termination
+            reward_fn = None
         else:
             raise ValueError("Invalid environment string.")
         env = gym.wrappers.TimeLimit(

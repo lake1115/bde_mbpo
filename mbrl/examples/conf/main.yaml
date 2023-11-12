@@ -1,7 +1,7 @@
 defaults:
   - algorithm: mbpo
   - dynamics_model: gaussian_mlp_ensemble
-  - overrides: mbpo_humanoid
+  - overrides: mbpo_halfcheetah_velocity
   # - action_optimizer: cem
 
 seed: 0
