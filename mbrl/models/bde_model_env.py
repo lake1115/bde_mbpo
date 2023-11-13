@@ -204,7 +204,7 @@ class BDE_ModelEnv(ModelEnv):
                 (_,_,_, sampled_next_model_state) = self.dynamics_model.sample(
                     sampled_actions,
                     sampled_model_state,
-                    deterministic=not sample,
+                    deterministic=False,
                     rng=self._rng,
                 )
                 # [N_s*batch_size, obs_dim]
@@ -230,7 +230,7 @@ class BDE_ModelEnv(ModelEnv):
                 (sampled_next_model_state,sampled_pred_rewards,_, _) = self.dynamics_model.sample(
                     sampled_actions,
                     sampled_model_state,
-                    deterministic=not sample,
+                    deterministic=False,
                     rng=self._rng,
                 )
 
