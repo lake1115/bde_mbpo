@@ -1,5 +1,6 @@
 import numpy as np
 from gymnasium.envs.mujoco import HalfCheetahEnv as HalfCheetahEnv_
+from gymnasium.spaces import Box
 
 class HalfCheetahEnv(HalfCheetahEnv_):
     def _get_obs(self):
@@ -49,6 +50,7 @@ class HalfCheetahVelEnv(HalfCheetahEnv):
     def __init__(self, goal_vel=1):
         self._goal_vel = goal_vel
         super(HalfCheetahVelEnv, self).__init__()
+        self.observation_space = Box(low=-np.inf, high=np.inf, shape=(20,), dtype=np.float64)
 
     def step(self, action):
         xposbefore = self.sim.data.qpos[0]
